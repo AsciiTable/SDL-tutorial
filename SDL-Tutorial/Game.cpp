@@ -1,5 +1,7 @@
 #include "Game.h"
 
+SDL_Texture* playerTex;
+SDL_Rect srcR, destR;
 
 Game::Game() {
 
@@ -32,6 +34,11 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	else {
 		isRunning = false;
 	}
+
+	SDL_Surface* tmpSurface = IMG_Load("Assets/Art/panpo.png");
+	playerTex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+	SDL_FreeSurface(tmpSurface);
+
 }
 
 void Game::HandleEvents() {
@@ -48,12 +55,20 @@ void Game::HandleEvents() {
 
 void Game::Update() {
 	count++;
+
+	destR.h = 70;
+	destR.w = 100;
+
+	// Move to right
+	destR.x = count;
+
 	std::cout << count << std::endl;
 }
 
 void Game::Render() {
 	SDL_RenderClear(renderer); // clears the buffer
 	// Add things to render
+	SDL_RenderCopy(renderer, playerTex, NULL, &destR);
 	SDL_RenderPresent(renderer);
 }
 
