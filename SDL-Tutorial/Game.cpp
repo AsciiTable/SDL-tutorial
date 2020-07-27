@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "TextureManager.h"
-SDL_Texture* playerTex;
-SDL_Rect srcR, destR;
+#include "GameObject.h"
+
+GameObject* player;
+GameObject* enemy;
 
 Game::Game() {
 
@@ -35,7 +37,8 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	playerTex = TextureManager::LoadTexture("Assets/Art/panpo.png", renderer);
+	player = new GameObject("Assets/Art/panpo_shadow.png", renderer, 0, 0);
+	enemy = new GameObject("Assets/Art/floppy_shadow.png", renderer, 50, 50);
 }
 
 void Game::HandleEvents() {
@@ -51,21 +54,15 @@ void Game::HandleEvents() {
 }
 
 void Game::Update() {
-	count++;
-
-	destR.h = 70;
-	destR.w = 100;
-
-	// Move to right
-	destR.x = count;
-
-	std::cout << count << std::endl;
+	player -> Update();
+	enemy->Update();
 }
 
 void Game::Render() {
 	SDL_RenderClear(renderer); // clears the buffer
 	// Add things to render
-	SDL_RenderCopy(renderer, playerTex, NULL, &destR);
+	player->Render();
+	enemy->Render();
 	SDL_RenderPresent(renderer);
 }
 
