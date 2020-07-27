@@ -12,7 +12,7 @@ int main(int argc, char*argv[]) {
 
 	// Game Loop: While game is running, handle any user input, update all objects, render changes to the display
 	game = new Game();
-	game->Init("SDL Tutorial Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
+	game->Init("SDL Tutorial Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
 
 	while (game->Running()) {
 
