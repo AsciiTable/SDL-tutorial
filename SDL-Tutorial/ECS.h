@@ -10,7 +10,8 @@
 Each entity has components, which give it functionality. 
 Each component has it's own class, so templates and other fancy stuff are required in order to get and add components.
 You can implement this same system in a simpler way yourself if the video confuses you, it'll help you understand.
-Templates Tutorial video: https://www.youtube.com/watch?v=I-hZkUa9mIs&feature=youtu.be */
+Templates Tutorial video: https://www.youtube.com/watch?v=I-hZkUa9mIs&feature=youtu.be 
+ECS Bad, What to use instead: https://www.youtube.com/watch?v=JxI3Eu5DPwE */
 
 class Component;
 class Entity;
@@ -46,11 +47,10 @@ public:
 	void Update() {
 		for (auto& c : components)
 			c->Update();
-		for (auto& c : components)
-			c->Draw();
 	}
 	void Draw() {
-
+		for (auto& c : components)
+			c->Draw();
 	}
 	bool IsActive() const {
 		return active;

@@ -1,17 +1,14 @@
 #include "Game.h"
 #include "TextureManager.h"
-#include "GameObject.h"
 #include "Map.h"
-#include "ECS.h"
 #include "Components.h"
 
-GameObject* player;
-GameObject* enemy;
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
 
 Manager manager;
-auto& newPlayer(manager.AddEntity());
+auto& player(manager.AddEntity());
+auto& enemy(manager.AddEntity());
 
 Game::Game() {
 
@@ -45,12 +42,12 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	player = new GameObject("Assets/Art/panpo_shadow.png", 0, 0);
-	enemy = new GameObject("Assets/Art/floppy_shadow.png", 50, 50);
 	map = new Map();
 
-	newPlayer.AddComponent<PositionComponent>();
-	newPlayer.GetComponent<PositionComponent>().SetPos(500, 500);
+	player.AddComponent<PositionComponent>();
+	player.AddComponent<SpriteComponent>("Assets/Art/panpo_shadow.png");
+	enemy.AddComponent<PositionComponent>(100,500);
+	enemy.AddComponent<SpriteComponent>("Assets/Art/floppy_shadow.png");
 }
 
 void Game::HandleEvents() {
@@ -66,19 +63,23 @@ void Game::HandleEvents() {
 }
 
 void Game::Update() {
-	player -> Update();
-	enemy->Update();
-
+	//player -> Update();
+	//enemy->Update();
+	manager.Refresh();
 	manager.Update();
-	std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
+	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
+	if (player.GetComponent<PositionComponent>().GetXPos() > 100) {
+		player.GetComponent<SpriteComponent>().SetTexture("Assets/Art/floppy_shadow.png");
+	}
 }
 
 void Game::Render() {
 	SDL_RenderClear(renderer); // clears the buffer
 	// Add things to render
 	map->DrawMap();
-	player->Render();
-	enemy->Render();
+	manager.Draw();
+	//player->Render();
+	//enemy->Render();
 	SDL_RenderPresent(renderer);
 }
 
