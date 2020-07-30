@@ -10,7 +10,7 @@ public:
 	}
 
 	void Init() override {
-		position = &entity->GetComponent<PositionComponent>();
+		transform = &entity->GetComponent<TransformComponent>();
 		srcRect.x = srcRect.y = 0;
 		srcRect.w = 100;
 		srcRect.h = 70;
@@ -18,8 +18,8 @@ public:
 		destRect.h = 70;
 	}
 	void Update() override {
-		destRect.x = position->GetXPos();
-		destRect.y = position->GetYPos();
+		destRect.x = transform->GetXPos();
+		destRect.y = transform->GetYPos();
 	}
 	void Draw() override {
 		TextureManager::Draw(texture, srcRect, destRect);
@@ -30,7 +30,7 @@ public:
 	}
 
 private:
-	PositionComponent* position;
+	TransformComponent* transform;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, destRect;
 

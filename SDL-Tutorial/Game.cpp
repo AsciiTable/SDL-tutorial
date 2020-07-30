@@ -44,9 +44,9 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	map = new Map();
 
-	player.AddComponent<PositionComponent>();
+	player.AddComponent<TransformComponent>();
 	player.AddComponent<SpriteComponent>("Assets/Art/panpo_shadow.png");
-	enemy.AddComponent<PositionComponent>(100,500);
+	enemy.AddComponent<TransformComponent>(100,500);
 	enemy.AddComponent<SpriteComponent>("Assets/Art/floppy_shadow.png");
 }
 

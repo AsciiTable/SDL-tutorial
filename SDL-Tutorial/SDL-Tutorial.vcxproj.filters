@@ -53,7 +53,7 @@
     <ClInclude Include="SpriteComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PositionComponent.h">
+    <ClInclude Include="TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
