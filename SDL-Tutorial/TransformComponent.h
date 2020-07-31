@@ -5,6 +5,9 @@
 class TransformComponent : public Component { // can just be a struct bc everything by default is public 
 public:
 	Vector2D position;
+	Vector2D velocity;
+	float speed = 3.0f;
+
 
 	TransformComponent() {
 		position.x = 0.0f;
@@ -16,6 +19,16 @@ public:
 	}
 	float GetXPos() { return position.x; }
 	float GetYPos() { return position.y; }
+
+	void Init() override {
+		velocity.x = 0;
+		velocity.y = 0;
+	}
+
+	void Update() override {
+		position.x += velocity.x * speed;
+		position.y += velocity.y * speed;
+	}
 
 	//void Init() override {
 	//	xpos = 0;

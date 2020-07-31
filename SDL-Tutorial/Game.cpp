@@ -5,6 +5,7 @@
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
+SDL_Event Game::event;
 
 Manager manager;
 auto& player(manager.AddEntity());
@@ -46,12 +47,12 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	player.AddComponent<TransformComponent>();
 	player.AddComponent<SpriteComponent>("Assets/Art/panpo_shadow.png");
+	player.AddComponent<KeyboardController>();
 	enemy.AddComponent<TransformComponent>(100,500);
 	enemy.AddComponent<SpriteComponent>("Assets/Art/floppy_shadow.png");
 }
 
 void Game::HandleEvents() {
-	SDL_Event event;
 	SDL_PollEvent(&event);
 	switch (event.type) {
 	case SDL_QUIT:
@@ -68,10 +69,6 @@ void Game::Update() {
 	manager.Refresh();
 	manager.Update();
 	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
-	player.GetComponent<TransformComponent>().position + Vector2D(2, 2);
-	if (player.GetComponent<TransformComponent>().GetXPos() > 100) {
-		player.GetComponent<SpriteComponent>().SetTexture("Assets/Art/floppy_shadow.png");
-	}
 	enemy.GetComponent<TransformComponent>().position + Vector2D(2, 2);
 }
 
