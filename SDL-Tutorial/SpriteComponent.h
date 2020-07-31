@@ -18,8 +18,8 @@ public:
 		destRect.h = 70;
 	}
 	void Update() override {
-		destRect.x = transform->GetXPos();
-		destRect.y = transform->GetYPos();
+		destRect.x = (int)transform->GetXPos();
+		destRect.y = (int)transform->GetYPos();
 	}
 	void Draw() override {
 		TextureManager::Draw(texture, srcRect, destRect);

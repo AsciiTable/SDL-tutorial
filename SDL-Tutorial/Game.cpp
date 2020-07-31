@@ -68,9 +68,11 @@ void Game::Update() {
 	manager.Refresh();
 	manager.Update();
 	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
-	if (player.GetComponent<PositionComponent>().GetXPos() > 100) {
+	player.GetComponent<TransformComponent>().position + Vector2D(2, 2);
+	if (player.GetComponent<TransformComponent>().GetXPos() > 100) {
 		player.GetComponent<SpriteComponent>().SetTexture("Assets/Art/floppy_shadow.png");
 	}
+	enemy.GetComponent<TransformComponent>().position + Vector2D(2, 2);
 }
 
 void Game::Render() {
