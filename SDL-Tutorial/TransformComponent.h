@@ -8,15 +8,28 @@ public:
 	Vector2D velocity;
 	float speed = 3.0f;
 
+	int height = 70;
+	int width = 100;
+	int scale = 1;
+
 
 	TransformComponent() {
 		position.x = 0.0f;
 		position.y = 0.0f;
 	}
-	TransformComponent(float x, int y) {
+	TransformComponent(float x, float y) {
 		position.x = x;
 		position.y = y;
 	}
+
+	TransformComponent(float x, float y, int h, int w, int sc) {
+		position.x = x;
+		position.y = y;
+		width = w;
+		height = h;
+		scale = sc;
+	}
+
 	float GetXPos() { return position.x; }
 	float GetYPos() { return position.y; }
 

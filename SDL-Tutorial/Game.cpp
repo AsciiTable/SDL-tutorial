@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "Map.h"
 #include "Components.h"
+#include "Collision.h"
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
@@ -10,6 +11,7 @@ SDL_Event Game::event;
 Manager manager;
 auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
+auto& wall(manager.AddEntity());
 
 Game::Game() {
 
@@ -48,8 +50,13 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.AddComponent<TransformComponent>();
 	player.AddComponent<SpriteComponent>("Assets/Art/panpo_shadow.png");
 	player.AddComponent<KeyboardController>();
+	player.AddComponent<ColliderComponent>("player");
 	enemy.AddComponent<TransformComponent>(100,500);
 	enemy.AddComponent<SpriteComponent>("Assets/Art/floppy_shadow.png");
+
+	wall.AddComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
+	wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
+	wall.AddComponent<ColliderComponent>("wall");
 }
 
 void Game::HandleEvents() {
