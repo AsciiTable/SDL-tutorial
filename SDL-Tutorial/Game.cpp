@@ -79,6 +79,7 @@ void Game::Update() {
 	enemy.GetComponent<TransformComponent>().position + Vector2D(2, 2);
 
 	if (Collision::AABB(player.GetComponent<ColliderComponent>().collider, wall.GetComponent<ColliderComponent>().collider)) {
+		player.GetComponent<TransformComponent>().velocity * (-1);
 		std::cout << "Wall Hit!" << std::endl;
 	}
 }

@@ -14,8 +14,7 @@ public:
 
 
 	TransformComponent() {
-		position.x = 0.0f;
-		position.y = 0.0f;
+		position.Zero();
 	}
 	TransformComponent(float x, float y) {
 		position.x = x;
@@ -23,6 +22,7 @@ public:
 	}
 
 	TransformComponent(int sc) {
+		position.Zero();
 		scale = sc;
 	}
 
@@ -38,8 +38,7 @@ public:
 	float GetYPos() { return position.y; }
 
 	void Init() override {
-		velocity.x = 0;
-		velocity.y = 0;
+		velocity.Zero();
 	}
 
 	void Update() override {

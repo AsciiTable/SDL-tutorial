@@ -22,8 +22,8 @@ public:
 
 	}
 	void Update() override {
-		destRect.x = (int)transform->GetXPos();
-		destRect.y = (int)transform->GetYPos();
+		destRect.x = static_cast<int>(transform->GetXPos());
+		destRect.y = static_cast<int>(transform->GetYPos());
 		destRect.w = transform->width*transform->scale;
 		destRect.h = transform->height*transform->scale;
 	}
