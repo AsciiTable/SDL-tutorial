@@ -22,6 +22,10 @@ public:
 		position.y = y;
 	}
 
+	TransformComponent(int sc) {
+		scale = sc;
+	}
+
 	TransformComponent(float x, float y, int h, int w, int sc) {
 		position.x = x;
 		position.y = y;

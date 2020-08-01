@@ -77,6 +77,10 @@ void Game::Update() {
 	manager.Update();
 	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
 	enemy.GetComponent<TransformComponent>().position + Vector2D(2, 2);
+
+	if (Collision::AABB(player.GetComponent<ColliderComponent>().collider, wall.GetComponent<ColliderComponent>().collider)) {
+		std::cout << "Wall Hit!" << std::endl;
+	}
 }
 
 void Game::Render() {
