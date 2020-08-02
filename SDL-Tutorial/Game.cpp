@@ -3,15 +3,22 @@
 #include "Map.h"
 #include "Components.h"
 #include "Collision.h"
+#include "Vector2D.h"
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
+std::vector<ColliderComponent*> Game::colliders;
+
 Manager manager;
 auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
 auto& wall(manager.AddEntity());
+
+auto& tile0(manager.AddEntity());
+auto& tile1(manager.AddEntity());
+auto& tile2(manager.AddEntity());
 
 Game::Game() {
 
@@ -47,6 +54,12 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	map = new Map();
 
+	tile0.AddComponent<TileComponent>(200,200,32,32,0);
+	tile1.AddComponent<TileComponent>(250, 250, 32, 32, 1);
+	tile1.AddComponent<ColliderComponent>("dirt");
+	tile2.AddComponent<TileComponent>(150, 150, 32, 32, 2);
+	tile2.AddComponent<ColliderComponent>("grass");
+
 	player.AddComponent<TransformComponent>();
 	player.AddComponent<SpriteComponent>("Assets/Art/panpo_shadow.png");
 	player.AddComponent<KeyboardController>();
@@ -78,16 +91,21 @@ void Game::Update() {
 	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
 	enemy.GetComponent<TransformComponent>().position + Vector2D(2, 2);
 
-	if (Collision::AABB(player.GetComponent<ColliderComponent>().collider, wall.GetComponent<ColliderComponent>().collider)) {
-		player.GetComponent<TransformComponent>().velocity * (-1);
-		std::cout << "Wall Hit!" << std::endl;
+	for (auto cc : colliders) {
+		Collision::AABB(player.GetComponent<ColliderComponent>(), *cc);
+		//if ()) {
+		//	player.GetComponent<TransformComponent>().velocity * -1;
+		//	std::cout << "Wall Hit!" << std::endl;
+		//}
 	}
+
+
 }
 
 void Game::Render() {
 	SDL_RenderClear(renderer); // clears the buffer
 	// Add things to render
-	map->DrawMap();
+	//map->DrawMap();
 	manager.Draw();
 	//player->Render();
 	//enemy->Render();
