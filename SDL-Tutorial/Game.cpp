@@ -16,9 +16,9 @@ auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
 auto& wall(manager.AddEntity());
 
-auto& tile0(manager.AddEntity());
-auto& tile1(manager.AddEntity());
-auto& tile2(manager.AddEntity());
+//auto& tile0(manager.AddEntity());
+//auto& tile1(manager.AddEntity());
+//auto& tile2(manager.AddEntity());
 
 Game::Game() {
 
@@ -54,11 +54,13 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	map = new Map();
 
-	tile0.AddComponent<TileComponent>(200,200,32,32,0);
-	tile1.AddComponent<TileComponent>(250, 250, 32, 32, 1);
-	tile1.AddComponent<ColliderComponent>("dirt");
-	tile2.AddComponent<TileComponent>(150, 150, 32, 32, 2);
-	tile2.AddComponent<ColliderComponent>("grass");
+	//tile0.AddComponent<TileComponent>(200,200,32,32,0);
+	//tile1.AddComponent<TileComponent>(250, 250, 32, 32, 1);
+	//tile1.AddComponent<ColliderComponent>("dirt");
+	//tile2.AddComponent<TileComponent>(150, 150, 32, 32, 2);
+	//tile2.AddComponent<ColliderComponent>("grass");
+
+	Map::LoadMap("Assets/Art/Tilemaps/test-map-1.txt", 25, 20);
 
 	player.AddComponent<TransformComponent>();
 	player.AddComponent<SpriteComponent>("Assets/Art/panpo_shadow.png");
@@ -121,5 +123,10 @@ void Game::Clean() {
 
 bool Game::Running() {
 	return isRunning;
+}
+
+void Game::AddTile(int id, int x, int y) {
+	auto& tile(manager.AddEntity());
+	tile.AddComponent<TileComponent>(x, y, 32, 32, id);
 }
 

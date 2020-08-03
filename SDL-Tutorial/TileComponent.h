@@ -26,10 +26,10 @@ public:
 			path = const_cast<char*>("Assets/Art/water.png");
 			break;
 		case 1:
-			path = const_cast <char*>("Assets/Art/dirt.png");
+			path = const_cast <char*>("Assets/Art/grass.png");
 			break;
 		case 2:
-			path = const_cast < char*>("Assets/Art/grass.png");
+			path = const_cast < char*>("Assets/Art/dirt.png");
 			break;
 		default:
 			break;
