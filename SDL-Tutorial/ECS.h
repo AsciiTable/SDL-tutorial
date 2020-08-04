@@ -15,11 +15,13 @@ ECS Bad, What to use instead: https://www.youtube.com/watch?v=JxI3Eu5DPwE */
 
 class Component;
 class Entity;
+class Manager;
 
 using ComponentID = std::size_t;
+using Group = std::size_t;
 
 inline ComponentID GetComponentTypeID() { // Review Tutorial #7 @ 2:27
-	static ComponentID lastID = 0;
+	static ComponentID lastID = 0u;// u for unsigned int
 	return lastID++;
 }
 
@@ -29,8 +31,10 @@ template <typename T> inline ComponentID GetComponentTypeID() noexcept {
 }
 
 constexpr std::size_t maxComponents = 32;
+constexpr std::size_t maxGroups = 32;
 
 using ComponentBitSet = std::bitset<maxComponents>; // checks for components
+using GroupBitset = std::bitset<maxGroups>;
 using ComponentArray = std::array<Component*, maxComponents>; // array of component pointers
 
 class Component {
@@ -44,6 +48,9 @@ public:
 
 class Entity {
 public:
+	Entity(Manager& mManager) : manager(mManager) {
+
+	}
 	void Update() {
 		for (auto& c : components)
 			c->Update();
@@ -57,6 +64,13 @@ public:
 	}
 	void Destroy() {
 		active = false;
+	}
+	bool HasGroup(Group mGroup) {
+		return groupBitset[mGroup];
+	}
+	void AddGroup(Group mGroup);
+	void DeleteGroup(Group mGroup) {
+		groupBitset[mGroup] = false;
 	}
 	template <typename T> bool HasComponent() const {
 		return componentBitSet[GetComponentTypeID<T>()];
@@ -78,11 +92,13 @@ public:
 		return *static_cast<T*>(ptr);
 	}
 private:
+	Manager& manager;
 	bool active = true;
 	std::vector<std::unique_ptr<Component>> components;
 
 	ComponentArray componentArray;
 	ComponentBitSet componentBitSet;
+	GroupBitset groupBitset;
 };
 
 class Manager {
@@ -96,18 +112,31 @@ public:
 			e->Draw();
 	}
 	void Refresh() { // removes entity if it's not active
+		for (auto i(0u); i < maxGroups; i++) {
+			auto& v(groupedEntities[i]);
+			v.erase(std::remove_if(std::begin(v), std::end(v), [i](Entity* mEntity) {return !mEntity->IsActive() || !mEntity->HasGroup(i); }), std::end(v));
+		}
 		entities.erase(std::remove_if(std::begin(entities), std::end(entities), [](const std::unique_ptr<Entity>& mEntity) {
 			return !mEntity->IsActive();
 		}),std::end(entities));
 	}
 
+	void AddToGroup(Entity* mEntity, Group mGroup) {
+		groupedEntities[mGroup].emplace_back(mEntity);
+	}
+
+	std::vector<Entity*>& getGroup(Group mGroup) {
+		return groupedEntities[mGroup];
+	}
+
 	Entity& AddEntity() {
-		Entity* e = new Entity();
+		Entity* e = new Entity(*this);
 		std::unique_ptr<Entity> uPtr{ e };
 		entities.emplace_back(std::move(uPtr));
 		return *e;
 	}
 private:
 	std::vector<std::unique_ptr<Entity>> entities;
+	std::array<std::vector<Entity*>, maxGroups> groupedEntities;
 };
 

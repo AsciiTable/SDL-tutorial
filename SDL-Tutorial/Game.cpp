@@ -16,6 +16,13 @@ auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
 auto& wall(manager.AddEntity());
 
+enum groupLabels : std::size_t {
+	groupMap,
+	groupPlayers,
+	groupEnemies,
+	groupColliders
+};
+
 //auto& tile0(manager.AddEntity());
 //auto& tile1(manager.AddEntity());
 //auto& tile2(manager.AddEntity());
@@ -69,9 +76,14 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	enemy.AddComponent<TransformComponent>(100,500);
 	enemy.AddComponent<SpriteComponent>("Assets/Art/floppy_shadow.png");
 
+	player.AddGroup(groupPlayers);
+	enemy.AddGroup(groupEnemies);
+
 	wall.AddComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
 	wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
 	wall.AddComponent<ColliderComponent>("wall");
+
+	wall.AddGroup(groupMap);
 }
 
 void Game::HandleEvents() {
@@ -104,13 +116,26 @@ void Game::Update() {
 
 }
 
+auto& tiles(manager.getGroup(groupMap));
+auto& players(manager.getGroup(groupPlayers));
+auto& enemies(manager.getGroup(groupEnemies));
+
 void Game::Render() {
 	SDL_RenderClear(renderer); // clears the buffer
 	// Add things to render
 	//map->DrawMap();
-	manager.Draw();
+	//manager.Draw(); // draws in order of creation
 	//player->Render();
 	//enemy->Render();
+	for (auto& t : tiles) {
+		t->Draw();
+	}
+	for (auto& p : players) {
+		p->Draw();
+	}
+	for (auto& e : enemies) {
+		e->Draw();
+	}
 	SDL_RenderPresent(renderer);
 }
 
@@ -128,5 +153,6 @@ bool Game::Running() {
 void Game::AddTile(int id, int x, int y) {
 	auto& tile(manager.AddEntity());
 	tile.AddComponent<TileComponent>(x, y, 32, 32, id);
+	tile.AddGroup(groupMap);
 }
 
