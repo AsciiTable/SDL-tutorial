@@ -70,7 +70,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	Map::LoadMap("Assets/Art/Tilemaps/test-map-1.txt", 25, 20);
 
 	player.AddComponent<TransformComponent>();
-	player.AddComponent<SpriteComponent>("Assets/Art/panpo_shadow.png");
+	player.AddComponent<SpriteComponent>("Assets/Art/panpo_idle.png", 9, 300);
 	player.AddComponent<KeyboardController>();
 	player.AddComponent<ColliderComponent>("player");
 	enemy.AddComponent<TransformComponent>(100,500);
