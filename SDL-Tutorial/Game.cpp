@@ -29,6 +29,10 @@ enum groupLabels : std::size_t {
 //auto& tile1(manager.AddEntity());
 //auto& tile2(manager.AddEntity());
 
+auto& tiles(manager.getGroup(groupMap));
+auto& players(manager.getGroup(groupPlayers));
+auto& enemies(manager.getGroup(groupEnemies));
+
 Game::Game() {
 
 }
@@ -71,7 +75,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	Map::LoadMap("Assets/Art/Tilemaps/test-map-1.txt", 25, 20);
 
-	player.AddComponent<TransformComponent>();
+	player.AddComponent<TransformComponent>(1);
 	player.AddComponent<SpriteComponent>("Assets/Art/panpo_sheet.png", true);
 	player.AddComponent<KeyboardController>();
 	player.AddComponent<ColliderComponent>("player");
@@ -85,7 +89,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	//wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
 	//wall.AddComponent<ColliderComponent>("wall");
 
-	wall.AddGroup(groupMap);
+	//awall.AddGroup(groupMap);
 }
 
 void Game::HandleEvents() {
@@ -107,20 +111,24 @@ void Game::Update() {
 	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
 	enemy.GetComponent<TransformComponent>().position + Vector2D(2, 2);
 
-	for (auto cc : colliders) {
-		Collision::AABB(player.GetComponent<ColliderComponent>(), *cc);
-		//if ()) {
-		//	player.GetComponent<TransformComponent>().velocity * -1;
-		//	std::cout << "Wall Hit!" << std::endl;
-		//}
+	Vector2D pVel = player.GetComponent<TransformComponent>().velocity;
+	int pSpeed = player.GetComponent<TransformComponent>().speed;
+
+	//for (auto cc : colliders) {
+	//	Collision::AABB(player.GetComponent<ColliderComponent>(), *cc);
+	//	//if ()) {
+	//	//	player.GetComponent<TransformComponent>().velocity * -1;
+	//	//	std::cout << "Wall Hit!" << std::endl;
+	//	//}
+	//}
+
+	for (auto t : tiles) {
+		t->GetComponent<TileComponent>().destRect.x += (-1 * (pVel.x) * (pSpeed));
+		t->GetComponent<TileComponent>().destRect.y += (-1 * (pVel.y) * (pSpeed));
 	}
 
 
 }
-
-auto& tiles(manager.getGroup(groupMap));
-auto& players(manager.getGroup(groupPlayers));
-auto& enemies(manager.getGroup(groupEnemies));
 
 void Game::Render() {
 	SDL_RenderClear(renderer); // clears the buffer
