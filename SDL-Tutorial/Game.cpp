@@ -16,6 +16,8 @@ auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
 auto& wall(manager.AddEntity());
 
+const char* mapfile = "Assets/Art/map-tiles.png";
+
 enum groupLabels : std::size_t {
 	groupMap,
 	groupPlayers,
@@ -79,9 +81,9 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.AddGroup(groupPlayers);
 	enemy.AddGroup(groupEnemies);
 
-	wall.AddComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
-	wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
-	wall.AddComponent<ColliderComponent>("wall");
+	//wall.AddComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
+	//wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
+	//wall.AddComponent<ColliderComponent>("wall");
 
 	wall.AddGroup(groupMap);
 }
@@ -150,9 +152,9 @@ bool Game::Running() {
 	return isRunning;
 }
 
-void Game::AddTile(int id, int x, int y) {
+void Game::AddTile(int srcX, int srcY, int xpos, int ypos) {
 	auto& tile(manager.AddEntity());
-	tile.AddComponent<TileComponent>(x, y, 32, 32, id);
+	tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, mapfile);
 	tile.AddGroup(groupMap);
 }
 

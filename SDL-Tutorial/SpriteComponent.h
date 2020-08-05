@@ -44,10 +44,10 @@ public:
 	}
 	void Update() override {
 		if (animated) {
-			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
+			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames); // this is what iterates through frames
 		}
 
-		srcRect.y = animIndex * transform->height;
+		srcRect.y = animIndex * transform->height; // gets the index of the animation
 
 		destRect.x = static_cast<int>(transform->GetXPos());
 		destRect.y = static_cast<int>(transform->GetYPos());
