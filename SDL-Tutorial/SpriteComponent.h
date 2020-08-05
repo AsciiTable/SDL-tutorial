@@ -49,8 +49,8 @@ public:
 
 		srcRect.y = animIndex * transform->height; // gets the index of the animation
 
-		destRect.x = static_cast<int>(transform->GetXPos());
-		destRect.y = static_cast<int>(transform->GetYPos());
+		destRect.x = static_cast<int>(transform->GetXPos()) - Game::camera.x;
+		destRect.y = static_cast<int>(transform->GetYPos()) - Game::camera.y;
 		destRect.w = transform->width*transform->scale;
 		destRect.h = transform->height*transform->scale;
 	}

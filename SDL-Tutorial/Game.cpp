@@ -9,6 +9,8 @@ Map* map;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
+SDL_Rect Game::camera = { 0,0,800,640 };
+
 std::vector<ColliderComponent*> Game::colliders;
 
 Manager manager;
@@ -89,7 +91,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	//wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
 	//wall.AddComponent<ColliderComponent>("wall");
 
-	//awall.AddGroup(groupMap);
+	//wall.AddGroup(groupMap);
 }
 
 void Game::HandleEvents() {
@@ -111,9 +113,7 @@ void Game::Update() {
 	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
 	enemy.GetComponent<TransformComponent>().position + Vector2D(2, 2);
 
-	Vector2D pVel = player.GetComponent<TransformComponent>().velocity;
-	int pSpeed = player.GetComponent<TransformComponent>().speed;
-
+	/**Collision detection*/
 	//for (auto cc : colliders) {
 	//	Collision::AABB(player.GetComponent<ColliderComponent>(), *cc);
 	//	//if ()) {
@@ -121,12 +121,25 @@ void Game::Update() {
 	//	//	std::cout << "Wall Hit!" << std::endl;
 	//	//}
 	//}
+	/** Scrolling map */
+	//Vector2D pVel = player.GetComponent<TransformComponent>().velocity;
+	//int pSpeed = player.GetComponent<TransformComponent>().speed;
+	//for (auto t : tiles) {
+	//	t->GetComponent<TileComponent>().destRect.x += (-1 * (pVel.x) * (pSpeed));
+	//	t->GetComponent<TileComponent>().destRect.y += (-1 * (pVel.y) * (pSpeed));
+	//}
 
-	for (auto t : tiles) {
-		t->GetComponent<TileComponent>().destRect.x += (-1 * (pVel.x) * (pSpeed));
-		t->GetComponent<TileComponent>().destRect.y += (-1 * (pVel.y) * (pSpeed));
-	}
+	camera.x = player.GetComponent<TransformComponent>().position.x - 400;
+	camera.y = player.GetComponent<TransformComponent>().position.y - 320;
 
+	if (camera.x < 0)
+		camera.x = 0;
+	if (camera.y < 0)
+		camera.y = 0;
+	if (camera.x > camera.w)
+		camera.x = camera.w;
+	if (camera.y > camera.h)
+		camera.y = camera.h;
 
 }
 

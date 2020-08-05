@@ -42,10 +42,10 @@ public:
 		velocity.Zero();
 	}
 
-	//void Update() override {
-	//	position.x += velocity.x * speed;
-	//	position.y += velocity.y * speed;
-	//}
+	void Update() override {
+		position.x += velocity.x * speed;
+		position.y += velocity.y * speed;
+	}
 
 	//void Init() override {
 	//	xpos = 0;
