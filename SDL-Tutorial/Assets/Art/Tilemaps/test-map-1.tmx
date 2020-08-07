@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="left-down" width="25" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="left-down" width="25" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="1">
  <tileset firstgid="1" source="test-map-tileset.tsx"/>
  <layer id="1" name="Tile Layer 1" width="25" height="20">
   <data encoding="base64" compression="zstd">
    KLUv/WDQBlUDALgBAAAAAQAAAAMCAQMCAwMDAQEDAwEBAyigUL0H8AIKAHYx8UYxS6AXOe0PpwGjMkCjh4coxiSAik+fVxoIy40zv8tXyTEin2iQ3aJbpBd75zfFLDDUV3TTPk+H7ODzGH84zqhdiCi5Ez8=
+  </data>
+ </layer>
+ <layer id="2" name="Collision Layer" width="25" height="20">
+  <data encoding="base64" compression="zstd">
+   KLUv/WDQBiUDAHAAAAAABAAEBAQEBAAEBC6goK8B8IICWAfRdM0n5749+82YOSIJeMFh4FJ5TPCE+UECtwSvlJ6cbSN4IWcFt4bETZ/shmXBeEIfmrCeaqNWeVa85ix9chaRjo3EWUeQj/dP6gc=
   </data>
  </layer>
 </map>

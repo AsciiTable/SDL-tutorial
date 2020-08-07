@@ -8,6 +8,9 @@ public:
 	SDL_Rect collider;
 	std::string tag;
 
+	SDL_Texture* tex;
+	SDL_Rect srcRect, destRect;
+
 	TransformComponent* transform;
 
 	ColliderComponent(std::string t) {
@@ -19,6 +22,8 @@ public:
 			entity->AddComponent<TransformComponent>();
 		}
 		transform = &entity->GetComponent<TransformComponent>();
+
+		tex = TextureManager::LoadTexture("Assets/Art/collision.png");
 
 		Game::colliders.push_back(this);
 	}
