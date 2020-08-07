@@ -11,29 +11,21 @@ SDL_Event Game::event;
 
 SDL_Rect Game::camera = { 0,0,800,640 };
 
-std::vector<ColliderComponent*> Game::colliders;
+//std::vector<ColliderComponent*> Game::colliders;
 
 Manager manager;
 auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
-auto& wall(manager.AddEntity());
+//auto& wall(manager.AddEntity());
 
-const char* mapfile = "Assets/Art/map-tiles.png";
+//const char* mapfile = "Assets/Art/map-tiles.png";
 
-enum groupLabels : std::size_t {
-	groupMap,
-	groupPlayers,
-	groupEnemies,
-	groupColliders
-};
 
 //auto& tile0(manager.AddEntity());
 //auto& tile1(manager.AddEntity());
 //auto& tile2(manager.AddEntity());
 
-auto& tiles(manager.getGroup(groupMap));
-auto& players(manager.getGroup(groupPlayers));
-auto& enemies(manager.getGroup(groupEnemies));
+
 
 Game::Game() {
 
@@ -67,7 +59,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	map = new Map();
+	map = new Map("Assets/Art/map-tiles.png", 2, 32);
 
 	//tile0.AddComponent<TileComponent>(200,200,32,32,0);
 	//tile1.AddComponent<TileComponent>(250, 250, 32, 32, 1);
@@ -75,7 +67,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	//tile2.AddComponent<TileComponent>(150, 150, 32, 32, 2);
 	//tile2.AddComponent<ColliderComponent>("grass");
 
-	Map::LoadMap("Assets/Art/Tilemaps/test-map-1.txt", 25, 20);
+	map->LoadMap("Assets/Art/Tilemaps/test-map-1.txt", 25, 20);
 
 	player.AddComponent<TransformComponent>(1);
 	player.AddComponent<SpriteComponent>("Assets/Art/panpo_sheet.png", true);
@@ -94,6 +86,11 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	//wall.AddGroup(groupMap);
 }
 
+auto& tiles(manager.getGroup(Game::groupMap));
+auto& players(manager.getGroup(Game::groupPlayers));
+auto& enemies(manager.getGroup(Game::groupEnemies));
+auto& colliders(manager.getGroup(Game::groupColliders));
+
 void Game::HandleEvents() {
 	SDL_PollEvent(&event);
 	switch (event.type) {
@@ -106,6 +103,9 @@ void Game::HandleEvents() {
 }
 
 void Game::Update() {
+
+	SDL_Rect playerCol = player.GetComponent<ColliderComponent>().collider;
+	Vector2D playerPos = player.GetComponent<TransformComponent>().position;
 	//player -> Update();
 	//enemy->Update();
 	manager.Refresh();
@@ -128,6 +128,13 @@ void Game::Update() {
 	//	t->GetComponent<TileComponent>().destRect.x += (-1 * (pVel.x) * (pSpeed));
 	//	t->GetComponent<TileComponent>().destRect.y += (-1 * (pVel.y) * (pSpeed));
 	//}
+
+	for (auto& c : colliders) {
+		SDL_Rect cCol = c->GetComponent<ColliderComponent>().collider;
+		if (Collision::AABB(cCol, playerCol)) {
+			player.GetComponent<TransformComponent>().position = playerPos;
+		}
+	}
 
 	camera.x = player.GetComponent<TransformComponent>().position.x - 400;
 	camera.y = player.GetComponent<TransformComponent>().position.y - 320;
@@ -153,6 +160,10 @@ void Game::Render() {
 	for (auto& t : tiles) {
 		t->Draw();
 	}
+	// UNCOMMENT THIS IF YOU DON'T WANT TO SEE COLLIDERS
+	for (auto& c : colliders) {
+		c->Draw();
+	}
 	for (auto& p : players) {
 		p->Draw();
 	}
@@ -171,11 +182,5 @@ void Game::Clean() {
 
 bool Game::Running() {
 	return isRunning;
-}
-
-void Game::AddTile(int srcX, int srcY, int xpos, int ypos) {
-	auto& tile(manager.AddEntity());
-	tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, mapfile);
-	tile.AddGroup(groupMap);
 }
 

@@ -1,6 +1,9 @@
 #include "Map.h"
 #include "Game.h"
 #include <fstream> // file reading
+#include "ECS.h"
+#include "Components.h"
+#include "Game.h"
 
 //#include "TextureManager.h"
 
@@ -25,7 +28,13 @@
 //					{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 
 //					{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-Map::Map() {
+extern Manager manager; // gets a manager class that's defined somewhere else (Game.cpp)
+
+Map::Map(const char* mapFP, float mscale, int tsize) {
+	mapFilePath = mapFP;
+	mapScale = mscale;
+	tileSize = tsize;
+	scaledSize = mscale * tsize;
 	//dirt = TextureManager::LoadTexture("Assets/Art/dirt.png");
 	//grass = TextureManager::LoadTexture("Assets/Art/grass.png");
 	//water = TextureManager::LoadTexture("Assets/Art/water.png");
@@ -63,17 +72,37 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY) {
 			mapFile.get(tile);
 			srcY = atoi(&tile);//atoi converts char to int
 			std::cout << srcY << ", ";
-			srcY *= 32;
+			srcY *= tileSize;
 			//mapFile.get(tile);
 			//srcX = atoi(&tile);//atoi converts char to int
-			//srcX *= 32;
+			//srcX *= tileSize;
 			//std::cout << srcX << std::endl;
-			Game::AddTile(srcY, 0, x * 64, y * 64); 
+			AddTile(srcY, 0, x * (scaledSize), y * (scaledSize));
+			mapFile.ignore();
+		}
+	}
+
+	mapFile.ignore();
+
+	for (int y = 0; y < sizeY; y++) {
+		for (int x = 0; x < sizeX; x++) {
+			mapFile.get(tile);
+			if (tile == '1') {
+				auto& tcol(manager.AddEntity());
+				tcol.AddComponent<ColliderComponent>("terrain", x * (scaledSize), y*(scaledSize), scaledSize);
+				tcol.AddGroup(Game::groupColliders);
+			}
 			mapFile.ignore();
 		}
 	}
 
 	mapFile.close();
+}
+
+void Map::AddTile(int srcX, int srcY, int xpos, int ypos) {
+	auto& tile(manager.AddEntity());
+	tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, mapFilePath);
+	tile.AddGroup(Game::groupMap);
 }
 
 //void Map::DrawMap() {
