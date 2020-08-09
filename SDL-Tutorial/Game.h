@@ -23,6 +23,7 @@ public:
 	//static std::vector<ColliderComponent*> colliders;
 	
 	static SDL_Rect camera;
+	static AssetManager assets;
 
 	enum groupLabels : std::size_t {
 		groupMap,

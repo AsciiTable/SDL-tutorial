@@ -30,8 +30,9 @@
 
 extern Manager manager; // gets a manager class that's defined somewhere else (Game.cpp)
 
-Map::Map(const char* mapFP, float mscale, int tsize) {
-	mapFilePath = mapFP;
+Map::Map(std::string tID, float mscale, int tsize) {
+	//mapFilePath = mapFP;
+	texID = tID;
 	mapScale = mscale;
 	tileSize = tsize;
 	scaledSize = mscale * tsize;
@@ -101,7 +102,7 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY) {
 
 void Map::AddTile(int srcX, int srcY, int xpos, int ypos) {
 	auto& tile(manager.AddEntity());
-	tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, mapFilePath);
+	tile.AddComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, texID);
 	tile.AddGroup(Game::groupMap);
 }
 

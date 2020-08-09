@@ -4,6 +4,7 @@
 #include "Components.h"
 #include "Collision.h"
 #include "Vector2D.h"
+#include "AssetManager.h"
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
@@ -25,7 +26,7 @@ auto& enemy(manager.AddEntity());
 //auto& tile1(manager.AddEntity());
 //auto& tile2(manager.AddEntity());
 
-
+AssetManager* Game::assets = new AssetManager(&manager);
 
 Game::Game() {
 
@@ -59,7 +60,9 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	map = new Map("Assets/Art/map-tiles.png", 2, 32);
+	assets->AddTexture("terrain", "Assets/Art/map-tiles.png");
+	assets->AddTexture("player", "Assets/Art/panpo_sheet.png");
+	map = new Map("terrain", 2, 32);
 
 	//tile0.AddComponent<TileComponent>(200,200,32,32,0);
 	//tile1.AddComponent<TileComponent>(250, 250, 32, 32, 1);
@@ -70,7 +73,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	map->LoadMap("Assets/Art/Tilemaps/test-map-1.txt", 25, 20);
 
 	player.AddComponent<TransformComponent>(1);
-	player.AddComponent<SpriteComponent>("Assets/Art/panpo_sheet.png", true);
+	player.AddComponent<SpriteComponent>("player", true);
 	player.AddComponent<KeyboardController>();
 	player.AddComponent<ColliderComponent>("player");
 	enemy.AddComponent<TransformComponent>(100,500);
