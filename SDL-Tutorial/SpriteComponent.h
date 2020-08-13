@@ -15,8 +15,8 @@ public:
 	SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
 	SpriteComponent() = default;
-	SpriteComponent(const char* path) {
-		SetTexture(path);
+	SpriteComponent(std::string id) {
+		SetTexture(id);
 	}
 	SpriteComponent(std::string id, bool isAnimated) {
 		animated = isAnimated;

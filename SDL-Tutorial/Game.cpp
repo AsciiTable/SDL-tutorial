@@ -7,14 +7,15 @@
 #include "AssetManager.h"
 
 Map* map;
+Manager manager;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
 SDL_Rect Game::camera = { 0,0,800,640 };
+AssetManager* Game::assets = new AssetManager(&manager);
 
 //std::vector<ColliderComponent*> Game::colliders;
 
-Manager manager;
 auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
 //auto& wall(manager.AddEntity());
@@ -26,7 +27,7 @@ auto& enemy(manager.AddEntity());
 //auto& tile1(manager.AddEntity());
 //auto& tile2(manager.AddEntity());
 
-AssetManager* Game::assets = new AssetManager(&manager);
+
 
 Game::Game() {
 
@@ -62,6 +63,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	assets->AddTexture("terrain", "Assets/Art/map-tiles.png");
 	assets->AddTexture("player", "Assets/Art/panpo_sheet.png");
+	assets->AddTexture("projectile", "Assets/Art/bullet.png");
 	map = new Map("terrain", 2, 32);
 
 	//tile0.AddComponent<TileComponent>(200,200,32,32,0);
@@ -82,6 +84,10 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.AddGroup(groupPlayers);
 	enemy.AddGroup(groupEnemies);
 
+	// note here: the "speed" variable doesn't do anything, and the range actually changes based on how fast it's travelling
+	// the math needs to be redone.
+	assets->CreateProjectile(Vector2D(100, 550),  200000, Vector2D(20, -1), 0.0f, "projectile"); 
+
 	//wall.AddComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
 	//wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
 	//wall.AddComponent<ColliderComponent>("wall");
@@ -93,6 +99,7 @@ auto& tiles(manager.getGroup(Game::groupMap));
 auto& players(manager.getGroup(Game::groupPlayers));
 auto& enemies(manager.getGroup(Game::groupEnemies));
 auto& colliders(manager.getGroup(Game::groupColliders));
+auto& projectiles(manager.getGroup(Game::groupProjectiles));
 
 void Game::HandleEvents() {
 	SDL_PollEvent(&event);
@@ -139,6 +146,13 @@ void Game::Update() {
 		}
 	}
 
+	for (auto& p : projectiles) {
+		if (Collision::AABB(player.GetComponent<ColliderComponent>().collider, p->GetComponent<ColliderComponent>().collider)) {
+			std::cout << "Projectile hit player" << std::endl;
+			p->Destroy();
+		}
+	}
+
 	camera.x = player.GetComponent<TransformComponent>().position.x - 400;
 	camera.y = player.GetComponent<TransformComponent>().position.y - 320;
 
@@ -172,6 +186,9 @@ void Game::Render() {
 	}
 	for (auto& e : enemies) {
 		e->Draw();
+	}
+	for (auto& p : projectiles) {
+		p->Draw();
 	}
 	SDL_RenderPresent(renderer);
 }
