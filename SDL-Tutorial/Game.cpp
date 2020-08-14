@@ -5,6 +5,7 @@
 #include "Collision.h"
 #include "Vector2D.h"
 #include "AssetManager.h"
+#include <sstream>
 
 Map* map;
 Manager manager;
@@ -18,6 +19,7 @@ AssetManager* Game::assets = new AssetManager(&manager);
 
 auto& player(manager.AddEntity());
 auto& enemy(manager.AddEntity());
+auto& label(manager.AddEntity());
 //auto& wall(manager.AddEntity());
 
 //const char* mapfile = "Assets/Art/map-tiles.png";
@@ -61,9 +63,15 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
+	if (TTF_Init() == -1)
+		std::cout << "ERROR: Failed to initialize SDL_TTF." << std::endl;
+
 	assets->AddTexture("terrain", "Assets/Art/map-tiles.png");
 	assets->AddTexture("player", "Assets/Art/panpo_sheet.png");
 	assets->AddTexture("projectile", "Assets/Art/bullet.png");
+
+	assets->AddFont("arial", "Assets/Fonts/arial.ttf", 16);
+
 	map = new Map("terrain", 2, 32);
 
 	//tile0.AddComponent<TileComponent>(200,200,32,32,0);
@@ -84,9 +92,12 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.AddGroup(groupPlayers);
 	enemy.AddGroup(groupEnemies);
 
+	SDL_Color white = { 255, 255, 255, 255 };
+	label.AddComponent<UILabel>(10, 10, "blank", "arial", white);
+
 	// note here: the "speed" variable doesn't do anything, and the range actually changes based on how fast it's travelling
 	// the math needs to be redone.
-	assets->CreateProjectile(Vector2D(100, 550),  200000, Vector2D(20, -1), 0.0f, "projectile"); 
+	assets->CreateProjectile(Vector2D(100, 550),  2000, Vector2D(2, -1), 0, "projectile"); 
 
 	//wall.AddComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
 	//wall.AddComponent<SpriteComponent>("Assets/Art/dirt.png");
@@ -118,6 +129,10 @@ void Game::Update() {
 	Vector2D playerPos = player.GetComponent<TransformComponent>().position;
 	//player -> Update();
 	//enemy->Update();
+
+	std::stringstream ss; // holds an output string
+	ss << "Player position: " << playerPos;
+	label.GetComponent<UILabel>().SetLabelText(ss.str(), "arial");
 	manager.Refresh();
 	manager.Update();
 	//std::cout << newPlayer.GetComponent<PositionComponent>().GetXPos() << ", " << newPlayer.GetComponent<PositionComponent>().GetYPos() << std::endl;
@@ -190,6 +205,7 @@ void Game::Render() {
 	for (auto& p : projectiles) {
 		p->Draw();
 	}
+	label.Draw();
 	SDL_RenderPresent(renderer);
 }
 

@@ -25,3 +25,10 @@ void AssetManager::CreateProjectile(Vector2D pos, int range, Vector2D vel, float
 	projectile.AddGroup(Game::groupProjectiles);
 
 }
+
+void AssetManager::AddFont(std::string id, std::string path, int fontSize) {
+	fonts.emplace(id, TTF_OpenFont(path.c_str(), fontSize));
+}
+TTF_Font* AssetManager::GetFont(std::string id) {
+	return fonts[id];
+}
